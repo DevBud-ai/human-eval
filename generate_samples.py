@@ -7,8 +7,8 @@ from human_eval.data import write_jsonl, read_problems
 
 MODEL_API = "http://216.48.187.144:8000/v1/chat/completions"
 
-def get_prompt(prompt, entry_point):
-    new_prompt = prompt + ' Complete the ' + entry_point + ' function. Return only the code without description'
+def get_prompt(prompt):
+    new_prompt = prompt + ' Write a python script for this problem'
     return new_prompt
 
 
