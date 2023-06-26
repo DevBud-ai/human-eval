@@ -12,7 +12,7 @@ def get_prompt(prompt):
     return new_prompt
 
 
-def generate_one_completion(model_name, prompt, entry_point):
+def generate_one_completion(model_name, prompt):
     url = MODEL_API
 
     payload = json.dumps({
@@ -21,7 +21,7 @@ def generate_one_completion(model_name, prompt, entry_point):
     "messages": [
         {
         "role": "user",
-        "content": get_prompt(prompt, entry_point)
+        "content": get_prompt(prompt)
         }
     ]
     })
@@ -40,9 +40,9 @@ def generate_one_completion(model_name, prompt, entry_point):
 def main(args):
     problems = read_problems()
 
-    num_samples_per_task = 20
+    num_samples_per_task = int(args.samples_per_task)
     samples = [
-        dict(task_id=task_id, completion=generate_one_completion(args.model_name, problems[task_id]["prompt"], problems[task_id]["entry_point"]))
+        dict(task_id=task_id, completion=generate_one_completion(args.model_name, problems[task_id]["prompt"]))
         for task_id in tqdm(problems)
         for _ in range(num_samples_per_task)
     ]
@@ -52,6 +52,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_name", type=str, required=True)
     parser.add_argument("--output_path", type=str, default="samples/samples.jsonl")
+    parser.add_argument("--samples_per_task", type=str, default=20)
     args = parser.parse_args()
 
     main(args)
